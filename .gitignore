@@ -1,0 +1,4 @@
+*.bin
+gamedata.asm
+venv/
+.idea/

@@ -1,0 +1,56 @@
+{
+  "palette1":
+  [
+    {"color1": "0x22"},
+    {"color2": "0x16"},
+    {"color3": "0x27"},
+    {"color4": "0x18"}
+  ],
+  "objects":
+  [
+    {
+      "name": "Player",
+      "x_position": 10,
+      "y_position": 10,
+      "tiles": [
+        {
+          "address": "0x3A",
+          "attributes": "0x00",
+          "x_offset": 0,
+          "y_offset": 0
+        },
+        {
+          "address": "0x37",
+          "attributes": "0x00",
+          "x_offset": 8,
+          "y_offset": 0
+        },
+        {
+          "address": "0x4F",
+          "attributes": "0x00",
+          "x_offset": 0,
+          "y_offset": 8
+        },
+        {
+          "address": "0x4F",
+          "attributes": "0x40",
+          "x_offset": 8,
+          "y_offset": 8
+        }
+      ]
+    },
+    {
+      "name": "Star",
+      "x_position": 28,
+      "y_position": 32,
+      "tiles": [
+        {
+          "address": "0x00",
+          "attributes": "0x00",
+          "x_offset": 0,
+          "y_offset": 0
+        }
+      ]
+    }
+  ]
+}
