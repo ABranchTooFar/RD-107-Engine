@@ -6,6 +6,20 @@
     {"color3": "0x27"},
     {"color4": "0x18"}
   ],
+  "palette2":
+  [
+    {"color1": "0x22"},
+    {"color2": "0x16"},
+    {"color3": "0x27"},
+    {"color4": "0x18"}
+  ],
+  "palette3":
+  [
+    {"color1": "0x22"},
+    {"color2": "0x16"},
+    {"color3": "0x27"},
+    {"color4": "0x18"}
+  ],
   "objects":
   [
     {
