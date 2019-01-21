@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    
+    "palettes": {
+      "type": "array",
+      "minItems": 8
+    },
+    
+    "objects": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "name": { "type": "string" },
+          "x_position": { "type": "integer" },
+          "y_position": { "type": "integer" },
+          "tiles": { "type": "array" }
+        },
+        "required": [ "name", "x_position", "y_position", "tiles" ]
+      }
+    }
+  },
+  "required": [ "objects" ]
+}
+

@@ -141,7 +141,10 @@ LoadPalettes:
   LDA #$18
   STA $2007             ;write to PPU
 
+  LDX #$00
   JSR loadPlayer
+  LDX #$10
+  JSR loadGoomba
 
   LDA #%10000000   ; enable NMI, sprites from Pattern Table 0
   STA $2000

@@ -1,12 +1,13 @@
 import argparse
 import json
+from jsonschema import validate, ValidationError
 
 
 class Objects:
     ppu_register = 0x0200
     current_indent = "  "
 
-    template_load_tile = '{0:s}LDA #${1:02X}\n{0:s}STA ${2:04X}'
+    template_load_tile = '{0:s}LDA #${1:02X}\n{0:s}STA ${2:04X}, x\n'
 
     def load_tile(self, chr_address, attributes, x_position, y_position):
         print(self.template_load_tile.format(self.current_indent, y_position, self.ppu_register))
@@ -47,8 +48,21 @@ if __name__ == '__main__':
     except FileNotFoundError:
         exit('ERROR: File not found: ' + input_file)
 
+    try:
+        json_schema_file = open('gamedata.schema', 'r')
+    except FileNotFoundError:
+        exit('ERROR: File not found: gamedata.schema')
+
     json_data = json.load(json_file)
     json_file.close()
+
+    json_schema = json.load(json_schema_file)
+    json_schema_file.close()
+
+    try:
+        validate(json_data, json_schema)
+    except ValidationError as error:
+        exit(error)
 
     if 'objects' not in json_data:
         exit('ERROR: No \"objects\" found in file: ' + input_file)
