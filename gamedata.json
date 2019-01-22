@@ -1,6 +1,10 @@
 {
-  "objects":
-  [
+  "output_files": [
+    {
+      "objects": "objects.asm"
+    }
+  ],
+  "objects": [
     {
       "name": "Player",
       "x_position": 10,
@@ -50,13 +54,13 @@
           "y_offset": 0
         },
         {
-	  "address": "0x72",
+          "address": "0x72",
           "attributes": "0x00",
           "x_offset": 0,
           "y_offset": 8
         },
-	{
-  	  "address": "0x73",
+        {
+          "address": "0x73",
           "attributes": "0x00",
           "x_offset": 8,
           "y_offset": 8
