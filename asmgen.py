@@ -1,73 +1,48 @@
 import argparse
 import json
-from jsonschema import validate, ValidationError
+# from jsonschema import validate, ValidationError
 
+parser = argparse.ArgumentParser(description='Does the tedious job of generating assembly for objects')
+parser.add_argument('-s', '--schema-file',
+                    type=argparse.FileType('r'),
+                    help='The JSON file describing the objects',
+                    default='schema.json')
+parser.add_argument('-i', '--input-file',
+                    type=argparse.FileType('r'),
+                    help='The JSON file describing the objects',
+                    default='game_data.json')
+#parser.add_argument('-o', '--output-object-file',
+                    #type=argparse.FileType('r'),
+                    #help='The ASM file with the objects\' code',
+                    #default='objects.asm')
+#parser.add_argument('-p', '--output-palette-file',
+                    #type=argparse.FileType('r'),
+                    #help='The ASM file with the palettes\' code',
+                    #default='palette.asm')
 
-class Objects:
-    ppu_register = 0x0200
-    current_indent = "  "
+args = parser.parse_args()
 
-    template_load_tile = '{0:s}LDA #${1:02X}\n{0:s}STA ${2:04X}, x\n'
-
-    def load_tile(self, chr_address, attributes, x_position, y_position):
-        print(self.template_load_tile.format(self.current_indent, y_position, self.ppu_register))
-        self.ppu_register += 1
-        print('  ; Tile address in PPU memory')
-        print(self.template_load_tile.format(self.current_indent, chr_address, self.ppu_register))
-        self.ppu_register += 1
-        print('  ; Attributes')
-        print(self.template_load_tile.format(self.current_indent, attributes, self.ppu_register))
-        self.ppu_register += 1
-        print('  ; Horizontal position')
-        print(self.template_load_tile.format(self.current_indent, x_position, self.ppu_register))
-        self.ppu_register += 1
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Does the tedious job of generating assemply for objects')
-    parser.add_argument('-i', '--input-file',
-                        type=str,
-                        help='The JSON file describing the objects',
-                        default='gamedata.json')
-
-    args = parser.parse_args()
-
-    return args.input_file
-
-
-if __name__ == '__main__':
-    input_file = parse_args()
-
-    try:
-        json_file = open(input_file, 'r')
-    except FileNotFoundError:
-        exit('ERROR: File not found: ' + input_file)
-
-    try:
-        json_schema_file = open('schema.json', 'r')
-    except FileNotFoundError:
-        exit('ERROR: File not found: schema.json')
-
+with args.input_file as json_file:
     json_data = json.load(json_file)
-    json_file.close()
 
-    json_schema = json.load(json_schema_file)
-    json_schema_file.close()
+with args.schema_file as schema_file:
+    schema_data = json.load(schema_file)
 
-    try:
-        validate(json_data, json_schema)
-    except ValidationError as error:
-        exit(error)
+# Templates for the ASM code
+agent_start_template = '.MACRO load{}'
+agent_end_template = '.ENDM\n'
 
-    for obj in json_data['objects']:
-        print('load' + obj['name'] + ':')
+load_tile_template = '  LDA #${:02X}\n  STA ${:04X}, x'
 
-        objects = Objects()
+oam_index = 0
 
-        for tile in obj['tiles']:
-            objects.load_tile(int(tile['address'], 0),
-                              int(tile['attributes'], 0),
-                              obj['x_position'] + tile['x_offset'],
-                              obj['y_position'] + tile['y_offset'])
-
-        print('  RTS\n')
+for agent in json_data['agents']:
+    print(agent_start_template.format(agent['name']))
+    for tile in agent['tiles']:
+        print(load_tile_template.format(agent['y_position'] + tile['y_offset'], 0x0200 + oam_index * 4))
+        print(load_tile_template.format(int(tile['address'], 0), 0x0200 + oam_index * 4 + 1))
+        print(load_tile_template.format(int(tile['attributes'], 0), 0x0200 + oam_index * 4 + 2))
+        print(load_tile_template.format(agent['x_position'] + tile['x_offset'], 0x0200 + oam_index * 4 + 3))
+        print()
+        oam_index += 1
+    print(agent_end_template)

@@ -1,10 +1,10 @@
 {
   "output_files": [
     {
-      "objects": "objects.asm"
+      "agents": "objects.asm"
     }
   ],
-  "objects": [
+  "agents": [
     {
       "name": "Player",
       "x_position": 10,

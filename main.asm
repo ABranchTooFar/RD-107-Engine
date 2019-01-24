@@ -1,28 +1,23 @@
-; constants
+; Constants
 PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
-; variables
-  .enum $0000
+; Variables
+  .INCLUDE "variables.asm"
 
-  ; NOTE: declare variables using the DSB and DSW directives, like this:
+; Macros
+  .INCLUDE "game_data.asm"
 
-  ;MyVariable0 .dsb 1
-  ;MyVariable1 .dsb 3
+; iNES Header
+  .DB "NES", $1a ;identification of the iNES header
+  .DB PRG_COUNT ;number of 16KB PRG-ROM pages
+  .DB $01 ;number of 8KB CHR-ROM pages
+  .DB $00|MIRRORING ;mapper 0 and mirroring
+  .DSB 9, $00 ;clear the remaining bytes
 
-  .ende
+; Program Bank(s)
+  .BASE $10000-(PRG_COUNT*$4000)
 
-; iNES header
-  .db "NES", $1a ;identification of the iNES header
-  .db PRG_COUNT ;number of 16KB PRG-ROM pages
-  .db $01 ;number of 8KB CHR-ROM pages
-  .db $00|MIRRORING ;mapper 0 and mirroring
-  .dsb 9, $00 ;clear the remaining bytes
-
-; program bank(s)
-  .base $10000-(PRG_COUNT*$4000)
-
-  .include "gamedata.asm"
 
 Reset:
 
@@ -60,7 +55,7 @@ vblankwait2:      ; Second wait for vblank, PPU is ready after this
   BIT $2002
   BPL vblankwait2
 
-  ; TODO: Move this to the objgen.py!
+  ; TODO: Move this to the asmgen.py!
 LoadPalettes:
   LDA $2002    ; read PPU status to reset the high/low latch
   LDA #$3F
@@ -142,9 +137,9 @@ LoadPalettes:
   STA $2007             ;write to PPU
 
   LDX #$00
-  JSR loadPlayer
+  loadPlayer
   LDX #$10
-  JSR loadGoomba
+  loadGoomba
 
   LDA #%10000000   ; enable NMI, sprites from Pattern Table 0
   STA $2000
@@ -171,12 +166,12 @@ IRQ:
   ; NOTE: IRQ code goes here
   RTI
 
-; interrupt vectors
-   .org $fffa
+; Interrupt Vectors
+   .ORG $fffa
 
-   .dw NMI
-   .dw Reset
-   .dw IRQ
+   .DW NMI
+   .DW Reset
+   .DW IRQ
 
-; CHR-ROM bank
-   .incbin "tiles.chr"
+; CHR-ROM Bank
+   .INCBIN "tiles.chr"

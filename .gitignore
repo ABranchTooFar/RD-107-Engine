@@ -1,4 +1,5 @@
-*.bin
-gamedata.asm
+main.bin
+game_data.asm
 venv/
 .idea/
+notes.md
