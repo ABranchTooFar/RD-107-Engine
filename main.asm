@@ -18,6 +18,8 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 ; Program Bank(s)
   .BASE $10000-(PRG_COUNT*$4000)
 
+; Routines
+  .INCLUDE "routines.asm"
 
 Reset:
 
@@ -138,7 +140,7 @@ LoadPalettes:
 
   LDX #$00
   loadPlayer
-  LDX #$10
+  LDX #$04
   loadGoomba
 
   LDA #%10000000   ; enable NMI, sprites from Pattern Table 0
@@ -152,6 +154,18 @@ Forever:
 
 
 NMI:
+
+  LDX #$00
+  LDA #$01
+  STA Param1
+  STA Param2
+  JSR moveAgent
+  LDX #$01
+  LDA #$FF
+  STA Param1
+  LDA #$00
+  STA Param2
+  JSR moveAgent
 
   ; NOTE: NMI code goes here
   LDA #$00

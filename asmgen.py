@@ -32,12 +32,17 @@ with args.schema_file as schema_file:
 agent_start_template = '.MACRO load{}'
 agent_end_template = '.ENDM\n'
 
-load_tile_template = '  LDA #${:02X}\n  STA ${:04X}, x'
+load_tile_template = '  LDA #${:02X}\n  STA ${:04X}'
+load_oam_template = '  LDA #${1:02X}\n  STA AgentYLow + {0}\n' \
+                    '  LDA #${2:02X}\n  STA AgentXLow + {0}\n' \
+                    '  LDA #${3:02X}\n  STA AgentOAMAddress + {0}\n' \
+                    '  LDA #${4:02X}\n  STA AgentTileTotal + {0}\n'
 
 oam_index = 0
 
-for agent in json_data['agents']:
+for i, agent in enumerate(json_data['agents']):
     print(agent_start_template.format(agent['name']))
+    print(load_oam_template.format(i, agent['y_position'], agent['x_position'], oam_index * 4, len(agent['tiles'])))
     for tile in agent['tiles']:
         print(load_tile_template.format(agent['y_position'] + tile['y_offset'], 0x0200 + oam_index * 4))
         print(load_tile_template.format(int(tile['address'], 0), 0x0200 + oam_index * 4 + 1))
