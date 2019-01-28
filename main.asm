@@ -19,8 +19,8 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 ; Program Bank(s)
   .BASE $10000-(PRG_COUNT*$4000)
 
-; Routines
-  .INCLUDE "routines.asm"
+; Sub-routines
+  .INCLUDE "subroutines.asm"
 
 Reset:
 
@@ -58,86 +58,15 @@ vblankwait2:      ; Second wait for vblank, PPU is ready after this
   BIT $2002
   BPL vblankwait2
 
-  ; TODO: Move this to the asmgen.py!
-LoadPalettes:
-  LDA $2002    ; read PPU status to reset the high/low latch
-  LDA #$3F
-  STA $2006    ; write the high byte of $3F00 address
-  LDA #$00
-  STA $2006    ; write the low byte of $3F00 address
-  LDX #$00
-; --------
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
-
-  LDA #$22
-  STA $2007             ;write to PPU
-  LDA #$16
-  STA $2007             ;write to PPU
-  LDA #$27
-  STA $2007             ;write to PPU
-  LDA #$18
-  STA $2007             ;write to PPU
+  latchPalette
+  loadPalette1
+  loadPalette1
+  loadPalette1
+  loadPalette1
+  loadPalette1
+  loadPalette2
+  loadPalette1
+  loadPalette1
 
   LDX #$00
   loadPlayer

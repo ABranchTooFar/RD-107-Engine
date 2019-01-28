@@ -28,11 +28,16 @@ with args.schema_file as schema_file:
 macro_start_template = '.MACRO load{}\n'
 macro_end_template = '.ENDM\n\n'
 
-load_tile_template = '  LDA #${:02X}\n  STA ${:04X}\n'
-load_oam_template = '  LDA #${1:02X}\n  STA AgentYLow + {0}\n' \
-                    '  LDA #${2:02X}\n  STA AgentXLow + {0}\n' \
-                    '  LDA #${3:02X}\n  STA AgentOAMAddress + {0}\n' \
-                    '  LDA #${4:02X}\n  STA AgentTileTotal + {0}\n\n'
+load_tile_template = '  LDA #${:02X}\n' \
+                     '  STA ${:04X}\n'
+load_oam_template = '  LDA #${1:02X}\n' \
+                    '  STA AgentYLow + {0}\n' \
+                    '  LDA #${2:02X}\n' \
+                    '  STA AgentXLow + {0}\n' \
+                    '  LDA #${3:02X}\n' \
+                    '  STA AgentOAMAddress + {0}\n' \
+                    '  LDA #${4:02X}\n' \
+                    '  STA AgentTileTotal + {0}\n\n'
 
 
 latch_palette_template = '; Latch the PPU status register and set PPU write address\n' \

@@ -1,9 +1,4 @@
 {
-  "output_files": [
-    {
-      "agents": "objects.asm"
-    }
-  ],
   "palettes": [
     {
       "name": "Palette1",
@@ -11,15 +6,7 @@
     },
     {
       "name": "Palette2",
-      "colors": ["0x22", "0x16", "0x27", "0x18"]
-    }
-  ],
-  "subroutines": [
-    {
-      "name": "moveAgent",
-      "x_register": "index",
-      "parameter1": "HSpeed",
-      "parameter2": "VSpeed"
+      "colors": ["0x0F", "0x0F", "0x36", "0x17"]
     }
   ],
   "agents": [
@@ -61,25 +48,25 @@
       "tiles": [
         {
           "address": "0x70",
-          "attributes": "0x00",
+          "attributes": "0x01",
           "x_offset": 0,
           "y_offset": 0
         },
         {
           "address": "0x71",
-          "attributes": "0x00",
+          "attributes": "0x01",
           "x_offset": 8,
           "y_offset": 0
         },
         {
           "address": "0x72",
-          "attributes": "0x00",
+          "attributes": "0x01",
           "x_offset": 0,
           "y_offset": 8
         },
         {
           "address": "0x73",
-          "attributes": "0x00",
+          "attributes": "0x01",
           "x_offset": 8,
           "y_offset": 8
         }
