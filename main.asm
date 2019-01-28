@@ -2,6 +2,9 @@
 PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
+; Configuration
+  .INCLUDE "config.asm"
+
 ; Variables
   .INCLUDE "variables.asm"
 

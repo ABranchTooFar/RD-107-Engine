@@ -1,6 +1,3 @@
-  CONTROLLER_REGISTER_1 .EQU #$4016
-  CONTROLLER_REGISTER_2 .EQU #$4017
-
 ; ReadControllers
 ; Ring counters are used to store controller button state in the address 'Controller<N>'
 ; Adapted from https://wiki.nesdev.com/w/index.php/Controller_Reading
