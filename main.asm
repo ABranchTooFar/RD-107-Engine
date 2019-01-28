@@ -85,7 +85,30 @@ Forever:
 
 NMI:
 
-  MoveAgent #$00,#$01,#$01
+  JSR ReadControllers
+
+  LDA #%00000001
+  BIT Controller1
+  BEQ +
+  MoveAgent #$00,#$01,#$00
++
+  LDA #%00000010
+  BIT Controller1
+  BEQ +
+  MoveAgent #$00,#$FF,#$00
++
+  LDA #%00000100
+  BIT Controller1
+  BEQ +
+  MoveAgent #$00,#$00,#$01
++
+  LDA #%00001000
+  BIT Controller1
+  BEQ +
+  MoveAgent #$00,#$00,#$FF
++
+
+
   MoveAgent #$01,#$FF,#$00
 
   ; NOTE: NMI code goes here
