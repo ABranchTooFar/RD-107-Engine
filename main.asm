@@ -7,6 +7,7 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 ; Macros
   .INCLUDE "game_data.asm"
+  .INCLUDE "macros.asm"
 
 ; iNES Header
   .DB "NES", $1a ;identification of the iNES header
@@ -155,17 +156,8 @@ Forever:
 
 NMI:
 
-  LDX #$00
-  LDA #$01
-  STA Param1
-  STA Param2
-  JSR moveAgent
-  LDX #$01
-  LDA #$FF
-  STA Param1
-  LDA #$00
-  STA Param2
-  JSR moveAgent
+  MoveAgent #$00,#$01,#$01
+  MoveAgent #$01,#$FF,#$00
 
   ; NOTE: NMI code goes here
   LDA #$00

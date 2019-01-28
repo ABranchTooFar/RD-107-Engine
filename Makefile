@@ -1,4 +1,4 @@
-main.bin : main.asm variables.asm game_data.asm
+main.bin : main.asm variables.asm routines.asm macros.asm game_data.asm
 	asm6 main.asm
 
 game_data.asm : asmgen.py game_data.json
