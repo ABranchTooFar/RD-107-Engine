@@ -1,8 +1,8 @@
-main.bin : main.asm variables.asm routines.asm macros.asm game_data.asm
+main.bin : main.asm variables.asm routines.asm macros.asm build/macros.asm
 	asm6 main.asm
 
-game_data.asm : asmgen.py game_data.json
-	python3 asmgen.py > game_data.asm
+build/macros.asm : asmgen.py game_data.json
+	python3 asmgen.py
 
 clean :
-	rm -f main.bin game_data.asm
+	rm -f main.bin build/*

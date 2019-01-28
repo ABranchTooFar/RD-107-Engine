@@ -6,7 +6,7 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
   .INCLUDE "variables.asm"
 
 ; Macros
-  .INCLUDE "game_data.asm"
+  .INCLUDE "build/macros.asm"
   .INCLUDE "macros.asm"
 
 ; iNES Header

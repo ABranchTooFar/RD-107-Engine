@@ -1,5 +1,6 @@
 main.bin
-game_data.asm
+build/*
+!build/.gitkeep
 venv/
 .idea/
 notes.md

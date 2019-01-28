@@ -11,14 +11,10 @@ parser.add_argument('-i', '--input-file',
                     type=argparse.FileType('r'),
                     help='The JSON file describing the objects',
                     default='game_data.json')
-#parser.add_argument('-o', '--output-object-file',
-                    #type=argparse.FileType('r'),
-                    #help='The ASM file with the objects\' code',
-                    #default='objects.asm')
-#parser.add_argument('-p', '--output-palette-file',
-                    #type=argparse.FileType('r'),
-                    #help='The ASM file with the palettes\' code',
-                    #default='palette.asm')
+parser.add_argument('-m', '--output-macros-file',
+                    type=argparse.FileType('w+'),
+                    help='The ASM file with the macros',
+                    default='build/macros.asm')
 
 args = parser.parse_args()
 
@@ -29,25 +25,56 @@ with args.schema_file as schema_file:
     schema_data = json.load(schema_file)
 
 # Templates for the ASM code
-agent_start_template = '.MACRO load{}'
-agent_end_template = '.ENDM\n'
+macro_start_template = '.MACRO load{}\n'
+macro_end_template = '.ENDM\n\n'
 
-load_tile_template = '  LDA #${:02X}\n  STA ${:04X}'
+load_tile_template = '  LDA #${:02X}\n  STA ${:04X}\n'
 load_oam_template = '  LDA #${1:02X}\n  STA AgentYLow + {0}\n' \
                     '  LDA #${2:02X}\n  STA AgentXLow + {0}\n' \
                     '  LDA #${3:02X}\n  STA AgentOAMAddress + {0}\n' \
-                    '  LDA #${4:02X}\n  STA AgentTileTotal + {0}\n'
+                    '  LDA #${4:02X}\n  STA AgentTileTotal + {0}\n\n'
+
+
+latch_palette_template = '; Latch the PPU status register and set PPU write address\n' \
+                         '.MACRO latchPalette\n' \
+                         '  LDA $2002\n' \
+                         '  LDA #$3F\n' \
+                         '  STA $2006\n' \
+                         '  LDA #$00\n' \
+                         '  STA $2006\n' \
+                         '  LDX #$00\n' \
+                         '.ENDM\n\n'
+load_palette_template = '; Load values into the PPU (MUST LATCH FIRST)\n' \
+                        '  LDA #${:02X}\n'\
+                        '  STA $2007\n' \
+                        '  LDA #${:02X}\n'\
+                        '  STA $2007\n' \
+                        '  LDA #${:02X}\n'\
+                        '  STA $2007\n' \
+                        '  LDA #${:02X}\n'\
+                        '  STA $2007\n\n'
+
+args.output_macros_file.write(latch_palette_template)
+
+for palette in json_data['palettes']:
+    args.output_macros_file.write('; ' + palette['name'] + '\n')
+    args.output_macros_file.write(macro_start_template.format(palette['name']))
+    args.output_macros_file.write(load_palette_template.format(int(palette['colors'][0], 0),
+                                                               int(palette['colors'][1], 0),
+                                                               int(palette['colors'][2], 0),
+                                                               int(palette['colors'][3], 0)))
+    args.output_macros_file.write(macro_end_template)
 
 oam_index = 0
 
 for i, agent in enumerate(json_data['agents']):
-    print(agent_start_template.format(agent['name']))
-    print(load_oam_template.format(i, agent['y_position'], agent['x_position'], oam_index * 4, len(agent['tiles'])))
+    args.output_macros_file.write(macro_start_template.format(agent['name']))
+    args.output_macros_file.write(load_oam_template.format(i, agent['y_position'], agent['x_position'], oam_index * 4, len(agent['tiles'])))
     for tile in agent['tiles']:
-        print(load_tile_template.format(agent['y_position'] + tile['y_offset'], 0x0200 + oam_index * 4))
-        print(load_tile_template.format(int(tile['address'], 0), 0x0200 + oam_index * 4 + 1))
-        print(load_tile_template.format(int(tile['attributes'], 0), 0x0200 + oam_index * 4 + 2))
-        print(load_tile_template.format(agent['x_position'] + tile['x_offset'], 0x0200 + oam_index * 4 + 3))
-        print()
+        args.output_macros_file.write(load_tile_template.format(agent['y_position'] + tile['y_offset'], 0x0200 + oam_index * 4))
+        args.output_macros_file.write(load_tile_template.format(int(tile['address'], 0), 0x0200 + oam_index * 4 + 1))
+        args.output_macros_file.write(load_tile_template.format(int(tile['attributes'], 0), 0x0200 + oam_index * 4 + 2))
+        args.output_macros_file.write(load_tile_template.format(agent['x_position'] + tile['x_offset'], 0x0200 + oam_index * 4 + 3))
+        args.output_macros_file.write('\n')
         oam_index += 1
-    print(agent_end_template)
+    args.output_macros_file.write(macro_end_template)
