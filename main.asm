@@ -89,28 +89,64 @@ Forever:
 NMI:
 
   JSR ReadControllers
-
+  ; Skip friction if the player hspeed is 0
+  LDA AgentHSpeed
+  BEQ +
+  ; Apply friction and skip the button checks
+  ; if neither the left or right is pressed
+  LDA #%00000011
+  BIT Controller1
+  BNE +
+  ; Apply friction
+  LDA AgentHSpeed
+  BMI negspeed
+  SEC
+  SBC #$01
+  STA AgentHSpeed
+  ; Skip the left/right button checks
+  JMP ++
+negspeed
+  CLC
+  ADC #$01
+  STA AgentHSpeed
+  ; Skip the left/right button checks
+  JMP ++
++
+  ; Right
   LDA #%00000001
   BIT Controller1
   BEQ +
-  MoveAgent #$00,#$01,#$00
+  ; Add to the horizontal speed
+  LDX AgentHSpeed
+  INX
+  STX AgentHSpeed
+  ;MoveAgent #$00,#$01,#$00
 +
+  ; Left
   LDA #%00000010
   BIT Controller1
   BEQ +
-  MoveAgent #$00,#$FF,#$00
+  LDX AgentHSpeed
+  DEX
+  STX AgentHSpeed
+  ;MoveAgent #$00,#$FF,#$00
 +
+++
+  ; Down
   LDA #%00000100
   BIT Controller1
   BEQ +
   MoveAgent #$00,#$00,#$01
 +
+  ; Up
   LDA #%00001000
   BIT Controller1
   BEQ +
   MoveAgent #$00,#$00,#$FF
 +
 
+  ; TODO: Make this more general?
+  UpdatePlayer
 
   MoveAgent #$01,#$FF,#$00
 
