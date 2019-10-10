@@ -83,12 +83,14 @@ vblankwait2:      ; Second wait for vblank, PPU is ready after this
   STA $2001
 
 Forever:
-  JMP Forever     ;jump back to Forever, infinite loop
+
+  ; Check if the NEW_FRAME flag is set
+  LDA NEW_FRAME
+  BIT GameState
+  BEQ +skipall
 
 
-NMI:
 
-  JSR ReadControllers
   ; Skip friction if the player hspeed is 0
   LDA AgentHSpeed
   BEQ +
@@ -112,26 +114,50 @@ negspeed
   ; Skip the left/right button checks
   JMP ++
 +
-  ; Right
+  ; Check if right is pressed
   LDA #%00000001
   BIT Controller1
   BEQ +
-  ; Add to the horizontal speed
+  ; Check if the speed is maxed
   LDX AgentHSpeed
+  CPX #$03
+  BPL +
+  ; Add to the horizontal speed
   INX
   STX AgentHSpeed
   ;MoveAgent #$00,#$01,#$00
 +
-  ; Left
+  ; Check if left is pressed
   LDA #%00000010
   BIT Controller1
   BEQ +
+  ; Check if the speed is maxed
   LDX AgentHSpeed
+  CPX #$FD
+  BMI +
   DEX
   STX AgentHSpeed
   ;MoveAgent #$00,#$FF,#$00
 +
 ++
+
+  ; Set the NEW_FRAME flag to zero
+  ; TODO: Fix this
+  LDA #$00
+  STA GameState
+
++skipall:
+  JMP Forever     ;jump back to Forever, infinite loop
+
+
+NMI:
+
+  ; Read the controller state
+  JSR ReadControllers
+
+  ; Move the Goomba for testing
+  MoveAgent #$01,#$FF,#$00
+
   ; Down
   LDA #%00000100
   BIT Controller1
@@ -148,13 +174,16 @@ negspeed
   ; TODO: Make this more general?
   UpdatePlayer
 
-  MoveAgent #$01,#$FF,#$00
-
   ; NOTE: NMI code goes here
   LDA #$00
   STA $2003  ; set the low byte (00) of the RAM address
   LDA #$02
   STA $4014  ; set the high byte (02) of the RAM address, start the transfer
+
+  ; Set the NEW_FRAME flag
+  ; TODO: Fix this
+  LDA #$01
+  STA GameState
 
   RTI
 

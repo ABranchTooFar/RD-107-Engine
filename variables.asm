@@ -1,5 +1,9 @@
 .ENUM $0000
 
+  ; GameState constants
+  NEW_FRAME = #%00000001
+  GameState .DSB 1
+
   Param1 .DSB 1
   Param2 .DSB 1
   Param3 .DSB 1
@@ -16,7 +20,6 @@
       Controller4 .DSB 1
     .ENDIF
   .ENDIF
- 
 
   AgentXHigh      .DSB AGENT_TOTAL
   AgentXLow       .DSB AGENT_TOTAL
