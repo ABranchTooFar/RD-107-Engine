@@ -1,4 +1,4 @@
-main.bin
+*.nes
 build/*
 !build/.gitkeep
 venv/

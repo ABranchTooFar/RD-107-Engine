@@ -3,14 +3,14 @@ PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
 MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
 
 ; Configuration
-  .INCLUDE "config.asm"
+  .INCLUDE "engine/config.asm"
 
 ; Variables
-  .INCLUDE "variables.asm"
+  .INCLUDE "engine/variables.asm"
 
 ; Macros
   .INCLUDE "build/macros.asm"
-  .INCLUDE "macros.asm"
+  .INCLUDE "engine/macros.asm"
 
 ; iNES Header
   .DB "NES", $1a ;identification of the iNES header
@@ -23,7 +23,7 @@ MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
   .BASE $10000-(PRG_COUNT*$4000)
 
 ; Sub-routines
-  .INCLUDE "subroutines.asm"
+  .INCLUDE "engine/subroutines.asm"
 
 Reset:
 
