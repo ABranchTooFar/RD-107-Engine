@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser(description='Does the tedious job of generating
 parser.add_argument('-s', '--schema-file',
                     type=argparse.FileType('r'),
                     help='The JSON file describing the objects',
-                    default='schema.json')
+                    default='engine/asmgen/schema.json')
 parser.add_argument('-i', '--input-file',
                     type=argparse.FileType('r'),
                     help='The JSON file describing the objects',
