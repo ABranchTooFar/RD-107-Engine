@@ -1,0 +1,8 @@
+PRG_COUNT .EQU 1       ; 1 = 16KB, 2 = 32KB
+MIRRORING .EQU %0001   ; %0000 = horizontal, %0001 = vertical, %1000 = four-screen
+
+CONTROLLER_REGISTER_1 .EQU #$4016
+CONTROLLER_REGISTER_2 .EQU #$4017
+
+AGENT_TOTAL           .EQU 8
+NUMBER_OF_PLAYERS     .EQU 1

@@ -1,16 +1,6 @@
-; Constants
-PRG_COUNT = 1 ;1 = 16KB, 2 = 32KB
-MIRRORING = %0001 ;%0000 = horizontal, %0001 = vertical, %1000 = four-screen
+; Includes the core components of the engine
+  .INCLUDE "engine/includes.asm"
 
-; Configuration
-  .INCLUDE "engine/config.asm"
-
-; Variables
-  .INCLUDE "engine/variables.asm"
-
-; Macros
-  .INCLUDE "build/macros.asm"
-  .INCLUDE "engine/macros.asm"
 
 ; iNES Header
   .DB "NES", $1a ;identification of the iNES header

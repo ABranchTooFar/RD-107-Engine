@@ -1,7 +1,7 @@
-main.bin : main.asm engine/variables.asm engine/subroutines.asm engine/macros.asm build/macros.asm
-	asm6 main.asm sample.nes
+sample : main.asm macros $(shell find engine -type f)
+	asm6 main.asm build/sample.nes
 
-build/macros.asm : engine/asmgen/asmgen.py game_data.json
+macros : engine/asmgen/asmgen.py game_data.json
 	python3 engine/asmgen/asmgen.py
 
 clean :
