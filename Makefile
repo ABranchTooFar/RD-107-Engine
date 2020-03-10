@@ -5,4 +5,4 @@ macros : engine/asmgen/asmgen.py game_data.json
 	python3 engine/asmgen/asmgen.py
 
 clean :
-	rm -f *.bin *.nes build/*
+	rm -f build/*

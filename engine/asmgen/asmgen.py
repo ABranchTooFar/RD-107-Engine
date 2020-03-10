@@ -30,6 +30,7 @@ macro_end_template = '.ENDM\n\n'
 
 load_tile_template = '  LDA #${:02X}\n' \
                      '  STA ${:04X}\n'
+
 load_oam_template = '  LDA #${1:02X}\n' \
                     '  STA AgentYLow + {0}\n' \
                     '  LDA #${2:02X}\n' \
@@ -39,16 +40,6 @@ load_oam_template = '  LDA #${1:02X}\n' \
                     '  LDA #${4:02X}\n' \
                     '  STA AgentTileTotal + {0}\n\n'
 
-
-latch_palette_template = '; Latch the PPU status register and set PPU write address\n' \
-                         '.MACRO latchPalette\n' \
-                         '  LDA $2002\n' \
-                         '  LDA #$3F\n' \
-                         '  STA $2006\n' \
-                         '  LDA #$00\n' \
-                         '  STA $2006\n' \
-                         '  LDX #$00\n' \
-                         '.ENDM\n\n'
 load_palette_template = '; Load values into the PPU (MUST LATCH FIRST)\n' \
                         '  LDA #${:02X}\n'\
                         '  STA $2007\n' \
@@ -59,7 +50,6 @@ load_palette_template = '; Load values into the PPU (MUST LATCH FIRST)\n' \
                         '  LDA #${:02X}\n'\
                         '  STA $2007\n\n'
 
-args.output_macros_file.write(latch_palette_template)
 
 for palette in json_data['palettes']:
     args.output_macros_file.write('; ' + palette['name'] + '\n')

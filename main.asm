@@ -1,13 +1,8 @@
 ; Includes the core components of the engine
   .INCLUDE "engine/includes.asm"
 
-
 ; iNES Header
-  .DB "NES", $1a ;identification of the iNES header
-  .DB PRG_COUNT ;number of 16KB PRG-ROM pages
-  .DB $01 ;number of 8KB CHR-ROM pages
-  .DB $00|MIRRORING ;mapper 0 and mirroring
-  .DSB 9, $00 ;clear the remaining bytes
+  .INCLUDE "engine/ines-header.asm"
 
 ; Program Bank(s)
   .BASE $10000-(PRG_COUNT*$4000)
@@ -29,27 +24,11 @@ Reset:
   STX $2001    ; disable rendering
   STX $4010    ; disable DMC IRQs
 
-vblankwait1:       ; First wait for vblank to make sure PPU is ready
-  BIT $2002
-  BPL vblankwait1
+  WaitForVBlank
 
-clrmem:
-  LDA #$00
-  STA $0000, x
-  STA $0100, x
-  STA $0200, x
-  STA $0400, x
-  STA $0500, x
-  STA $0600, x
-  STA $0700, x
-  LDA #$FE
-  STA $0300, x
-  INX
-  BNE clrmem
+  ClearMemory
 
-vblankwait2:      ; Second wait for vblank, PPU is ready after this
-  BIT $2002
-  BPL vblankwait2
+  WaitForVBlank
 
   latchPalette
   loadPalette1
